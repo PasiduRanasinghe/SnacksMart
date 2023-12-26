@@ -5,15 +5,18 @@ import {
   FaMagnifyingGlass,
 } from "react-icons/fa6";
 import { Menu, Transition, Popover } from "@headlessui/react";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
     <header className="bg-lime-200 shadow-md">
       <div className="flex justify-between items-center">
-        <h1 className="font-bold text-sm sm:text-xl flex-wrap p-3">
-          <span className="text-slate-500">Snacks</span>
-          <span className="text-slate-700">Mart</span>
-        </h1>
+        <Link to="/">
+          <h1 className="font-bold text-sm sm:text-xl flex-wrap p-3">
+            <span className="text-slate-500">Snacks</span>
+            <span className="text-slate-700">Mart</span>
+          </h1>
+        </Link>
         <form
           action=""
           className="bg-lime-100 p-2  flex items-center rounded-lg"
@@ -39,7 +42,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? "bg-lime-500 text-white" : "text-gray-900"
+                          active ? "bg-lime-400 text-white" : "text-gray-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >
@@ -51,7 +54,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                          active ? "bg-lime-400 text-white" : "text-gray-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >
@@ -64,7 +67,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                          active ? " bg-red-400 text-white" : "text-gray-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >
