@@ -16,11 +16,11 @@ mongoose.connect(process.env.MONGO).then(()=>{
 const app = express();
 
 app.listen(3000, () =>{
-        console.log("Server is running on port 3000");
+    console.log("Server is running on port 3000");
 });
 
 //middleware json support
-app.use(express.json);
+app.use(express.json());
 
 //redirect routes 
 app.use('/api/v1/user', userRouter);
