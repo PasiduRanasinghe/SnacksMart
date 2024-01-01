@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bycrypt from "bcryptjs";
 
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
   const { userName, email, password } = req.body;
   const hashedPassword = bycrypt.hashSync(password, 10);
   const user = new User({ userName, email, password: hashedPassword });
@@ -9,7 +9,7 @@ const signup = async (req, res) => {
     await user.save();
     res.status(201).json("User Created Successfully!");
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };
 
