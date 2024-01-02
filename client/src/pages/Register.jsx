@@ -77,7 +77,7 @@ export default function Register() {
       <div className="flex gap-2 mt-5">
         <p>Already have an account?</p>
         <Link to={'/login'}>
-          <span className=" text-blue-700">Log-In</span>
+          <span className=" text-blue-700 hover:underline">Log-In</span>
         </Link>
       </div>
     </div>

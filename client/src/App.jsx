@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/login";
-import Register from "./pages/Register";
-import About from "./pages/about";
-import Header from "./components/Header";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import About from './pages/about';
+import Header from './components/Header';
 
 export default function App() {
   return (
