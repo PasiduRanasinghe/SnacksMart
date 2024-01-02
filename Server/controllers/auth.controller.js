@@ -2,8 +2,8 @@ import User from '../models/user.model.js';
 import { errorHandler } from '../utils/error.js';
 import bycrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
 const signup = async (req, res, next) => {
+  //validate
   const { userName, email, password } = req.body;
   const hashedPassword = bycrypt.hashSync(password, 10);
   const user = new User({ userName, email, password: hashedPassword });
@@ -16,8 +16,8 @@ const signup = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(404, 'User Not Found!'));
     const validPassword = bycrypt.compareSync(password, validUser.password);
@@ -28,7 +28,9 @@ const login = async (req, res, next) => {
       .cookie('access_token', token, { httpOnly: true })
       .status(200)
       .json(rest);
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export { signup, login };
