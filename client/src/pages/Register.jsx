@@ -30,7 +30,7 @@ export default function Register() {
         setError(data.message);
       } else {
         setError(null);
-        navigate('/');
+        navigate('/login');
       }
     } catch (error) {
       setError(error.message);
