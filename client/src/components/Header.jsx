@@ -1,11 +1,7 @@
-import { GoSearch } from "react-icons/go";
-import {
-  FaUserLarge,
-  FaCartShopping,
-  FaMagnifyingGlass,
-} from "react-icons/fa6";
-import { Menu, Transition, Popover } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { GoSearch } from 'react-icons/go';
+import { FaUserLarge, FaCartShopping } from 'react-icons/fa6';
+import { Menu } from '@headlessui/react';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
@@ -42,7 +38,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? "bg-lime-400 text-white" : "text-gray-900"
+                          active ? 'bg-lime-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >
@@ -54,7 +50,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? "bg-lime-400 text-white" : "text-gray-900"
+                          active ? 'bg-lime-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >
@@ -67,7 +63,7 @@ export default function Header() {
                     {({ active }) => (
                       <a
                         className={`${
-                          active ? " bg-red-400 text-white" : "text-gray-900"
+                          active ? ' bg-red-400 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         href="/"
                       >

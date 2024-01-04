@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Oauth from '../components/Oauth';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
@@ -73,6 +74,7 @@ export default function Register() {
         >
           {isLoading ? 'Loading...' : 'Create Account'}
         </button>
+        <Oauth />
       </form>
       <div className="flex gap-2 mt-5">
         <p>Already have an account?</p>
