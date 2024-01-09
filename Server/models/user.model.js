@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default:
-        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fuser-avatar&psig=AOvVaw39ZHfxG58OnycRAh83_gYg&ust=1704898415455000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCNjvx9jH0IMDFQAAAAAdAAAAABAE',
+        'https://firebasestorage.googleapis.com/v0/b/snacksmart-2ccf7.appspot.com/o/avatars%2F1704812324508pngegg.png?alt=media&token=d2b0a3a3-79f3-4479-bd15-5a9979f6d1ee',
     },
   },
   { timestamps: true }
