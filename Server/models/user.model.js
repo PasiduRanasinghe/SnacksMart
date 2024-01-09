@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: 'https://avatar.iran.liara.run/public',
+      default:
+        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fuser-avatar&psig=AOvVaw39ZHfxG58OnycRAh83_gYg&ust=1704898415455000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCNjvx9jH0IMDFQAAAAAdAAAAABAE',
     },
   },
   { timestamps: true }
