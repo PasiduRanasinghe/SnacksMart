@@ -11,6 +11,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  logoutUserFailure,
+  logoutUserStart,
+  logoutUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -23,7 +26,7 @@ export default function Profile() {
   const [filePercentage, setFilePercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [updateSucces, setUpdateSuccess] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -100,6 +103,21 @@ export default function Profile() {
       dispatch(deleteUserFailure(error));
     }
   };
+  const handleLogout = async () => {
+    try {
+      dispatch(logoutUserStart());
+      const res = await fetch('/api/v1/auth/logout');
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(logoutUserFailure(data.message));
+        return;
+      }
+      dispatch(logoutUserSuccess());
+    } catch (error) {
+      dispatch(logoutUserFailure(error));
+    }
+  };
 
   return (
     <div className=" flex p-3 justify-center">
@@ -169,10 +187,12 @@ export default function Profile() {
           >
             Delete Account
           </span>
-          <span className=" text-red-700 cursor-pointer">Log Out</span>
+          <span onClick={handleLogout} className=" text-red-700 cursor-pointer">
+            Log Out
+          </span>
         </div>
         {error ? <p className=" text-red-700 mt-5">{error}</p> : null}
-        {updateSucces ? (
+        {updateSuccess ? (
           <p className=" text-green-700 mt-5">User Updated Successfully </p>
         ) : null}
       </div>
