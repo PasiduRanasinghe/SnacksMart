@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
+import productRouter from './routes/product.route.js';
 import cookieParser from 'cookie-parser';
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(cookieParser());
 //redirect routes
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/product', productRouter);
 
 //middleware for error handling
 app.use((err, req, res, next) => {
