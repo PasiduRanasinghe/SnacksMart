@@ -18,16 +18,24 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from '../redux/user/userSlice';
+import {
+  Avatar,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  useToast,
+} from '@chakra-ui/react';
 
 export default function Profile() {
-  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   const fileRef = useRef();
   const [file, setFile] = useState(undefined);
   const [filePercentage, setFilePercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  const toast = useToast();
 
   useEffect(() => {
     if (file) {
@@ -50,6 +58,13 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true);
+        toast({
+          title: 'Account create error.',
+          description: `${error.message}`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
@@ -74,14 +89,34 @@ export default function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setUpdateSuccess(true);
+
       if (data.success === false) {
+        toast({
+          title: 'Account create error.',
+          description: `${data.message}`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
         dispatch(updateUserFailure(data.message));
         return;
       }
-
+      toast({
+        title: 'Account created.',
+        description: "We've created your account for you.",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
       dispatch(updateUserSuccess(data));
     } catch (error) {
+      toast({
+        title: 'Account create error.',
+        description: `${error.message}`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
       dispatch(updateUserFailure(error.message));
     }
   };
@@ -133,12 +168,14 @@ export default function Profile() {
             hidden
             accept="image/*"
           />
-          <img
-            onClick={() => fileRef.current.click()}
+          <Avatar
+            size="xl"
+            name={currentUser.userName}
             src={formData.avatar || currentUser.avatar}
-            alt="profile picture"
-            className=" rounded-full h-24 w-24 self-center object-cover cursor-pointer mt-2"
+            alignSelf="center"
+            onClick={() => fileRef.current.click()}
           />
+
           <div className=" text-sm self-center">
             {fileUploadError ? (
               <span className=" text-red-700">
@@ -150,51 +187,73 @@ export default function Profile() {
               <span className=" text-green-700">Successfully Uploaded</span>
             ) : null}
           </div>
-          <input
-            type="text"
-            placeholder="username"
-            id="username"
-            defaultValue={currentUser.userName}
-            className=" border p-3 rounded-lg mt-2"
-            onChange={handleChange}
-          />
-          <input
-            type="email"
-            placeholder="email"
-            id="email"
-            defaultValue={currentUser.email}
-            className=" border p-3 rounded-lg mt-2"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            placeholder="password"
-            id="password"
-            className=" border p-3 rounded-lg mt-2"
-            onChange={handleChange}
-          />
-          <button
-            disabled={loading}
-            className=" bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-75"
+          <FormControl isRequired>
+            <FormLabel>Name</FormLabel>
+            <Input
+              type="text"
+              id="username"
+              defaultValue={currentUser.userName}
+              placeholder="name"
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              id="email"
+              defaultValue={currentUser.email}
+              placeholder="email"
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Phone Number</FormLabel>
+            <Input
+              type="tel"
+              id="phoneNumber"
+              defaultValue={currentUser.phoneNumber}
+              placeholder="phone number"
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Address</FormLabel>
+            <Input
+              type="text"
+              id="address"
+              defaultValue={currentUser.address}
+              placeholder="address"
+              onChange={handleChange}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            colorScheme="yellow"
+            isLoading={loading}
+            loadingText="Submitting"
           >
-            {loading ? 'loading...' : 'update'}
-          </button>
+            Update
+          </Button>
         </form>
-        <div className=" flex justify-between mt-5">
-          <span
+        <div className=" flex justify-between mt-2">
+          <Button
+            size="sm"
             onClick={handleDeleteUser}
-            className=" text-red-700 cursor-pointer"
+            colorScheme="red"
+            variant="outline"
           >
             Delete Account
-          </span>
-          <span onClick={handleLogout} className=" text-red-700 cursor-pointer">
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleLogout}
+            colorScheme="red"
+            variant="outline"
+          >
             Log Out
-          </span>
+          </Button>
         </div>
-        {error ? <p className=" text-red-700 mt-5">{error}</p> : null}
-        {updateSuccess ? (
-          <p className=" text-green-700 mt-5">User Updated Successfully </p>
-        ) : null}
       </div>
     </div>
   );
