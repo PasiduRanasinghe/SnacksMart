@@ -1,8 +1,9 @@
 import { GoSearch } from 'react-icons/go';
-import { FaUserLarge, FaCartShopping } from 'react-icons/fa6';
+import { FaCartShopping } from 'react-icons/fa6';
 import { Menu } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Avatar } from '@chakra-ui/react';
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -31,13 +32,13 @@ export default function Header() {
             <div>
               <Menu.Button>
                 {currentUser ? (
-                  <img
+                  <Avatar
+                    size="sm"
+                    name={currentUser.userName}
                     src={currentUser.avatar}
-                    alt="profile"
-                    className="  size-7 rounded-full object-cover"
                   />
                 ) : (
-                  <FaUserLarge className=" fill-slate-700 size-7" />
+                  <Avatar size="sm" />
                 )}
               </Menu.Button>
               {currentUser ? (
