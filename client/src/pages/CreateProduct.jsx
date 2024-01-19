@@ -1,11 +1,56 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useToast } from '@chakra-ui/react';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from './../firebase';
 
 export default function CreateProduct() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [file, setFile] = useState(undefined);
+  const [filePercentage, setFilePercentage] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const toast = useToast();
+
+  const handleFileUpload = (file) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, `productImages/${fileName}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePercentage(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+        toast({
+          title: 'Account create error.',
+          description: `${error.message}`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, image: downloadURL })
+        );
+      }
+    );
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -17,6 +62,9 @@ export default function CreateProduct() {
     e.preventDefault();
     try {
       setLoading(true);
+      if (file) {
+        handleFileUpload(file);
+      }
       const res = await fetch('/api/v1/product/create', {
         method: 'POST',
         headers: {
@@ -47,6 +95,7 @@ export default function CreateProduct() {
           onSubmit={handleSubmit}
         >
           <input
+            onChange={(e) => setFile(e.target.files[0])}
             className="p-2 mb-1 border bg-white rounded"
             type="file"
             accept="image/*"

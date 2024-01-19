@@ -1,129 +1,167 @@
-import { GoSearch } from 'react-icons/go';
-import { FaCartShopping } from 'react-icons/fa6';
-import { Menu } from '@headlessui/react';
-import { Link } from 'react-router-dom';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import { useSelector } from 'react-redux';
-import { Avatar } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
-export default function Header() {
+const pages = ['Shop', 'About', 'Contact'];
+const settings = ['Profile', 'Orders', 'Logout'];
+
+function ResponsiveAppBar() {
   const { currentUser } = useSelector((state) => state.user);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   return (
-    <header className="bg-lime-200 shadow-md">
-      <div className="flex justify-between items-center">
-        <Link to="/">
-          <h1 className="font-bold text-sm sm:text-xl flex-wrap p-3">
-            <span className="text-slate-500">Snacks</span>
-            <span className="text-slate-700">Mart</span>
-          </h1>
-        </Link>
-        <form
-          action=""
-          className="bg-lime-100 p-2  flex items-center rounded-lg"
-        >
-          <input
-            type="text"
-            placeholder="Search.."
-            className=" bg-transparent w-24 sm:w-64 focus:outline-none"
-          />
-          <GoSearch className="text-slate-700" />
-        </form>
-        <div className="flex items-center justify-evenly p-3 w-30">
-          <Menu as="div" className="relative ">
-            <div>
-              <Menu.Button>
-                {currentUser ? (
-                  <Avatar
-                    size="sm"
-                    name={currentUser.userName}
-                    src={currentUser.avatar}
-                  />
-                ) : (
-                  <Avatar size="sm" />
-                )}
-              </Menu.Button>
-              {currentUser ? (
-                <Menu.Items className="absolute grid justify-items-center right-0 z-10 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className=" p-1 w-24">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link to={'/profile'}>
-                          <p
-                            className={`${
-                              active ? 'bg-stone-200' : 'text-gray-900'
-                            } group flex w-full items-center rounded-md p-2 justify-center text-sm`}
-                            href="/"
-                          >
-                            Profile
-                          </p>
-                        </Link>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          className={`${
-                            active ? ' bg-stone-200' : 'text-gray-900'
-                          } group flex w-full items-center rounded-md p-2 justify-center  text-sm`}
-                          href="/"
-                        >
-                          Orders
-                        </a>
-                      )}
-                    </Menu.Item>
-                    <hr className=" bg-black" />
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          className={`${
-                            active ? 'bg-stone-200' : 'text-gray-900'
-                          } group flex w-full items-center rounded-md p-2 justify-center text-sm`}
-                          href="/"
-                        >
-                          Sign Out
-                        </a>
-                      )}
-                    </Menu.Item>
-                  </div>
-                </Menu.Items>
-              ) : (
-                <Menu.Items className="absolute grid justify-items-center right-0 z-10 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className=" p-1 w-24">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link to={'/login'}>
-                          <p
-                            className={`${
-                              active ? 'bg-stone-200' : 'text-gray-900'
-                            } group flex w-full items-center rounded-md p-2 justify-center text-sm`}
-                            href="/login"
-                          >
-                            Log In
-                          </p>
-                        </Link>
-                      )}
-                    </Menu.Item>
-                    <hr className=" bg-black" />
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link to={'/signup'}>
-                          <p
-                            className={`${
-                              active ? 'bg-stone-200' : 'text-gray-900'
-                            } group flex w-full items-center rounded-md p-2 justify-center text-sm`}
-                          >
-                            Sign Up
-                          </p>
-                        </Link>
-                      )}
-                    </Menu.Item>
-                  </div>
-                </Menu.Items>
-              )}
-            </div>
-          </Menu>
-          <FaCartShopping className=" fill-slate-700 size-7 ml-3" />
-        </div>
-      </div>
-    </header>
+    <AppBar position="fixed" className="bg-lime-200 z-50">
+      <Container maxWidth="xl" className="bg-lime-200">
+        <Toolbar disableGutters>
+          <Link to="/">
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              <span className="text-slate-500">Snacks</span>
+              <span className="text-slate-700">Mart</span>
+            </Typography>
+          </Link>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <Link to="/">
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              <span className="text-slate-500">Snacks</span>
+              <span className="text-slate-700">Mart</span>
+            </Typography>
+          </Link>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ color: 'black', display: 'block' }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar
+                  className=" size-2"
+                  alt={currentUser.userName}
+                  src={currentUser.avatar}
+                />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
+export default ResponsiveAppBar;

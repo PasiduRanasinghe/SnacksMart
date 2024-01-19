@@ -7,21 +7,25 @@ import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';
 import CreateProduct from './pages/CreateProduct';
+import SideBar from './pages/admin/SideBar';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Register />} />
-        <Route path="/about" element={<About />} />
-        <Route element={<PrivateRoute />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/create-product" element={<CreateProduct />} />
-        </Route>
-      </Routes>
+      <div className=" mt-16">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/create-product" element={<CreateProduct />} />
+          </Route>
+          <Route path="/dashboard" element={<SideBar />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }
