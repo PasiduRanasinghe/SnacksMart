@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';
 import CreateProduct from './pages/CreateProduct';
 import SideBar from './pages/admin/SideBar';
+import ProductsList from './pages/admin/ProductsList';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-product" element={<CreateProduct />} />
+            <Route path="/productlist" element={<ProductsList />} />
           </Route>
           <Route path="/dashboard" element={<SideBar />} />
         </Routes>
