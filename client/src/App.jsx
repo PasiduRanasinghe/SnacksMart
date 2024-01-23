@@ -6,8 +6,8 @@ import About from './pages/about';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/Profile';
-import CreateProduct from './pages/CreateProduct';
-import SideBar from './pages/admin/SideBar';
+import CreateProduct from './pages/admin/CreateProduct';
+import Admin from './pages/admin/Admin';
 import ProductsList from './pages/admin/ProductsList';
 
 export default function App() {
@@ -22,10 +22,11 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
-            <Route path="/create-product" element={<CreateProduct />} />
-            <Route path="/productlist" element={<ProductsList />} />
+            <Route path="/admin" element={<Admin />}>
+              <Route path="create-product" element={<CreateProduct />} />
+              <Route path="list-products" element={<ProductsList />} />
+            </Route>
           </Route>
-          <Route path="/dashboard" element={<SideBar />} />
         </Routes>
       </div>
     </BrowserRouter>

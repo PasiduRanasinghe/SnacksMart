@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import {
   getDownloadURL,
@@ -8,7 +7,7 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { app } from './../firebase';
+import { app } from '../../firebase';
 
 export default function CreateProduct() {
   const [formData, setFormData] = useState({});

@@ -34,55 +34,57 @@ export default function ProductsList() {
   }, []);
 
   return (
-    <div>
-      <Typography variant="h2">Product List</Typography>
-      <table className=" w-full min-w-max table-auto text-left mt-4">
-        <thead>
-          <tr>
-            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-              Image
-            </th>
-            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-              Title
-            </th>
-            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-              Description
-            </th>
-            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-              Option
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {productList &&
-            productList.length > 0 &&
-            productList.map((product) => (
-              <tr key={product._id}>
-                <td className="p-4 border-b border-blue-gray-50">image</td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography variant="small" color="blue-gray">
-                    {product.title}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="font-normal"
-                  >
-                    {product.description}
-                  </Typography>
-                </td>
+    <>
+      <div>
+        <Typography variant="h3">Product List</Typography>
+        <table className=" w-full min-w-max table-auto text-left mt-4">
+          <thead>
+            <tr>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Image
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Title
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Description
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Option
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {productList &&
+              productList.length > 0 &&
+              productList.map((product) => (
+                <tr key={product._id}>
+                  <td className="p-4 border-b border-blue-gray-50">image</td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <Typography variant="small" color="blue-gray">
+                      {product.title}
+                    </Typography>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <Typography
+                      variant="small"
+                      color="gray"
+                      className="font-normal"
+                    >
+                      {product.description}
+                    </Typography>
+                  </td>
 
-                <td className="p-4 border-b border-blue-gray-50">
-                  <IconButton variant="text" color="red">
-                    <TrashIcon />
-                  </IconButton>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <IconButton variant="text" color="red">
+                      <TrashIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
