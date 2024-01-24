@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import CreateProduct from './pages/admin/CreateProduct';
 import Admin from './pages/admin/Admin';
 import ProductsList from './pages/admin/ProductsList';
+import DashBoard from './pages/admin/DashBoard';
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />}>
+              <Route index element={<DashBoard />} />
+              <Route path="" element={<DashBoard />} />
               <Route path="create-product" element={<CreateProduct />} />
               <Route path="list-products" element={<ProductsList />} />
             </Route>
