@@ -61,7 +61,13 @@ export default function ProductsList() {
               productList.length > 0 &&
               productList.map((product) => (
                 <tr key={product._id}>
-                  <td className="p-4 border-b border-blue-gray-50">image</td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <img
+                      className=" size-11 object-cover"
+                      src={product.image}
+                      alt="product image"
+                    />
+                  </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <Typography variant="small" color="blue-gray">
                       {product.title}
