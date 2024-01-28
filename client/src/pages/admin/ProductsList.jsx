@@ -1,5 +1,7 @@
 import { IconButton, Typography } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 function TrashIcon() {
   return (
     <svg
@@ -76,6 +78,12 @@ export default function ProductsList() {
                   </td>
 
                   <td className="p-4 border-b border-blue-gray-50">
+                    <Link to={`/admin/update-product/${product._id}`}>
+                      <IconButton variant="text" color="blue">
+                        <PencilSquareIcon className=" size-5" />
+                      </IconButton>
+                    </Link>
+
                     <IconButton variant="text" color="red">
                       <TrashIcon />
                     </IconButton>

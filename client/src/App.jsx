@@ -10,6 +10,8 @@ import CreateProduct from './pages/admin/CreateProduct';
 import Admin from './pages/admin/Admin';
 import ProductsList from './pages/admin/ProductsList';
 import DashBoard from './pages/admin/DashBoard';
+import Shop from './pages/Shop';
+import UpdateProduct from './pages/admin/UpdateProduct';
 
 export default function App() {
   return (
@@ -21,6 +23,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
+          <Route path="/shop" element={<Shop />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />}>
@@ -29,6 +32,10 @@ export default function App() {
               <Route path="create-product" element={<CreateProduct />} />
               <Route path="list-products" element={<ProductsList />} />
             </Route>
+            <Route
+              path="admin/update-product/:productId"
+              element={<UpdateProduct />}
+            />
           </Route>
         </Routes>
       </div>
