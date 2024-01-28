@@ -1,15 +1,11 @@
-import {
-  Button,
-  Input,
-  Textarea,
-  Tooltip,
-  Typography,
-} from '@material-tailwind/react';
+import { Input, Textarea, Tooltip, Typography } from '@material-tailwind/react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { toast } from 'react-toastify';
 
 import {
   getDownloadURL,
@@ -27,15 +23,15 @@ export default function UpdateProduct() {
     discount: 0,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [file, setFile] = useState(undefined);
-  const [filePercentage, setFilePercentage] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState(false);
   const fileRef = useRef();
   const params = useParams();
 
   useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
     const fetchProduct = async () => {
       const productId = params.productId;
       const res = await fetch(`/api/v1/product/${productId}`);
@@ -49,28 +45,35 @@ export default function UpdateProduct() {
     };
 
     fetchProduct();
-  }, []);
+  }, [file]);
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, `productImages/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
+    const id = toast.loading('Image Uploading...');
     uploadTask.on(
       'state_changed',
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePercentage(Math.round(progress));
-      },
+      (snapshot) => {},
       (error) => {
-        setFileUploadError(true);
+        toast.update(id, {
+          render: error.message,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, image: downloadURL })
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData({ ...formData, image: downloadURL });
+          toast.update(id, {
+            render: 'Image Uploaded !',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        });
       }
     );
   };
@@ -83,14 +86,9 @@ export default function UpdateProduct() {
   };
 
   const handleSubmit = async (e) => {
-    console.log('done');
     e.preventDefault();
     try {
       setLoading(true);
-      if (file) {
-        handleFileUpload(file);
-      }
-      console.log(formData);
 
       const res = await fetch(`/api/v1/product/${params.productId}`, {
         method: 'PUT',
@@ -101,12 +99,13 @@ export default function UpdateProduct() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setError(data.message);
+        toast.error(data.message);
         return;
       }
       navigate('/admin');
+      toast.success('Product Updated Successfully !');
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -168,12 +167,9 @@ export default function UpdateProduct() {
           onChange={handleChange}
           value={formData.discount}
         />
-        <Button
-          className="mt-3 w-full bg-light-blue-900"
-          onClick={handleSubmit}
-        >
+        <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
           {loading ? 'loading...' : 'Update Product'}
-        </Button>
+        </button>
       </form>
     </div>
   );
