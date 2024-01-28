@@ -1,6 +1,11 @@
+import { Input, Textarea, Typography } from '@material-tailwind/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@chakra-ui/react';
+
+import { useEffect } from 'react';
+
+import { toast } from 'react-toastify';
+
 import {
   getDownloadURL,
   getStorage,
@@ -8,44 +13,51 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../../firebase';
-
 export default function CreateProduct() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    price: 0,
+    image: '',
+    discount: 0,
+  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [file, setFile] = useState(undefined);
-  const [filePercentage, setFilePercentage] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState(false);
-  const toast = useToast();
+
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, `productImages/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
+    const id = toast.loading('Image Uploading...');
     uploadTask.on(
       'state_changed',
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePercentage(Math.round(progress));
-      },
+      (snapshot) => {},
       (error) => {
-        setFileUploadError(true);
-        toast({
-          title: 'Account create error.',
-          description: `${error.message}`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
+        toast.update(id, {
+          render: error.message,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
         });
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, image: downloadURL })
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData({ ...formData, image: downloadURL });
+          toast.update(id, {
+            render: 'Image Uploaded !',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        });
       }
     );
   };
@@ -61,10 +73,8 @@ export default function CreateProduct() {
     e.preventDefault();
     try {
       setLoading(true);
-      if (file) {
-        handleFileUpload(file);
-      }
-      const res = await fetch('/api/v1/product/create', {
+
+      const res = await fetch('/api/v1/product/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,73 +83,54 @@ export default function CreateProduct() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setError(data.message);
+        toast.error(data.message);
         return;
       }
-      navigate('/');
+      navigate('/admin');
+      toast.success('Product Created Successfully !');
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
   return (
-    <main className="p-3">
-      <h1 className=" text-3xl font-semibold text-center my-7">
-        Create Product
-      </h1>
-      <div className="flex justify-center">
-        <form
-          className=" flex flex-col m-5 w-auto  lg: :w-2/4"
-          onSubmit={handleSubmit}
-        >
-          <input
-            onChange={(e) => setFile(e.target.files[0])}
-            className="p-2 mb-1 border bg-white rounded"
-            type="file"
-            accept="image/*"
-          />
-          <input
-            type="text"
-            placeholder="title"
-            className=" border p-3 rounded-lg mb-1"
-            id="title"
-            maxLength="40"
-            required
-            onChange={handleChange}
-          />
-
-          <textarea
-            type="text"
-            placeholder="Description"
-            className=" border p-3 rounded-lg mb-1"
-            id="description"
-            required
-            onChange={handleChange}
-          />
-          <input
-            type="number"
-            placeholder="price"
-            className=" border p-3 rounded-lg mb-1"
-            id="price"
-            required
-            onChange={handleChange}
-          />
-          <input
-            type="number"
-            placeholder="discount"
-            className=" border p-3 rounded-lg mb-1"
-            max="100"
-            min="0"
-            id="discount"
-            onChange={handleChange}
-          />
-          {error ? <p className=" text-red-500">{error}</p> : null}
-          <button className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
-            {loading ? 'loading...' : 'Create product'}
-          </button>
-        </form>
-      </div>
-    </main>
+    <div className="flex flex-col items-center">
+      <Typography variant="h2">Create Product</Typography>
+      <form
+        className=" my-7 w-80 sm:w-96 flex flex-col"
+        onSubmit={handleSubmit}
+      >
+        <Input
+          onChange={(e) => setFile(e.target.files[0])}
+          id="image"
+          type="file"
+          accept="image/*"
+        />
+        <Typography className="mt-3 font-medium">Title</Typography>
+        <Input type="text" id="title" onChange={handleChange} required />
+        <Typography className="mt-3 font-medium">Description</Typography>
+        <Textarea id="description" onChange={handleChange} required />
+        <Typography className="mt-3 font-medium">Price</Typography>
+        <Input
+          type="number"
+          min={0}
+          id="price"
+          onChange={handleChange}
+          required
+        />
+        <Typography className="mt-3 font-medium">Discount</Typography>
+        <Input
+          type="number"
+          max={99}
+          min={0}
+          id="discount"
+          onChange={handleChange}
+        />
+        <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
+          {loading ? 'loading...' : 'Update Product'}
+        </button>
+      </form>
+    </div>
   );
 }
