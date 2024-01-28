@@ -1,4 +1,5 @@
 import Product from './../models/product.model.js';
+import { errorHandler } from './../utils/error.js';
 const createProduct = async (req, res, next) => {
   try {
     const product = await Product.create(req.body);
@@ -47,4 +48,21 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
-export { createProduct, listProducts, getProduct, updateProduct };
+const deleteProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(errorHandler(404, 'Product Not Found!'));
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json('Product successfully deleted!');
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  createProduct,
+  listProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+};

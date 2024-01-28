@@ -2,6 +2,7 @@ import { IconButton, Typography } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
 function TrashIcon() {
   return (
     <svg
@@ -26,7 +27,7 @@ export default function ProductsList() {
       const res = await fetch('/api/v1/product/list');
       const data = await res.json();
       if (data.success === false) {
-        console.log('server error');
+        toast.error(data.message);
         return;
       }
       setProductList(data);
@@ -34,6 +35,25 @@ export default function ProductsList() {
 
     handleProducts();
   }, []);
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      const res = await fetch(`/api/v1/product/${productId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        toast.error(data.message);
+        return;
+      }
+      setProductList((prev) =>
+        prev.filter((product) => product._id !== productId)
+      );
+      toast.success('Product Deleted Successfully !');
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -90,7 +110,11 @@ export default function ProductsList() {
                       </IconButton>
                     </Link>
 
-                    <IconButton variant="text" color="red">
+                    <IconButton
+                      onClick={() => handleDeleteProduct(product._id)}
+                      variant="text"
+                      color="red"
+                    >
                       <TrashIcon />
                     </IconButton>
                   </td>
