@@ -128,7 +128,7 @@ export default function CreateProduct() {
           onChange={handleChange}
         />
         <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
-          {loading ? 'loading...' : 'Update Product'}
+          {loading ? 'loading...' : 'Create Product'}
         </button>
       </form>
     </div>
