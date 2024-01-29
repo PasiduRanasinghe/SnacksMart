@@ -16,6 +16,7 @@ import ProductsList from './pages/admin/ProductsList';
 import DashBoard from './pages/admin/DashBoard';
 import Shop from './pages/Shop';
 import UpdateProduct from './pages/admin/UpdateProduct';
+import Product from './pages/Product';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/product/:productId" element={<Product />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />}>
