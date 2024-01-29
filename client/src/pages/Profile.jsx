@@ -18,14 +18,9 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from '../redux/user/userSlice';
-import {
-  Avatar,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  useToast,
-} from '@chakra-ui/react';
+
+import { toast } from 'react-toastify';
+import { Avatar, Button, Input, Typography } from '@material-tailwind/react';
 
 export default function Profile() {
   const { currentUser, loading } = useSelector((state) => state.user);
@@ -35,7 +30,6 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
-  const toast = useToast();
 
   useEffect(() => {
     if (file) {
@@ -49,6 +43,11 @@ export default function Profile() {
     const storageRef = ref(storage, `avatars/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
+    if (formData.avatar) {
+      const fileRef = storage.refFromURL(formData.avatar);
+      fileRef.delete();
+    }
+
     uploadTask.on(
       'state_changed',
       (snapshot) => {
@@ -58,18 +57,13 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true);
-        toast({
-          title: 'Account create error.',
-          description: `${error.message}`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast.error(error.message);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, avatar: downloadURL })
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData({ ...formData, avatar: downloadURL });
+          toast.success('Avatar Uploaded!');
+        });
       }
     );
   };
@@ -91,32 +85,14 @@ export default function Profile() {
       const data = await res.json();
 
       if (data.success === false) {
-        toast({
-          title: 'Account create error.',
-          description: `${data.message}`,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
+        toast.error('Account update error.');
         dispatch(updateUserFailure(data.message));
         return;
       }
-      toast({
-        title: 'Account created.',
-        description: "We've created your account for you.",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      });
+      toast.success('Account Updated.');
       dispatch(updateUserSuccess(data));
     } catch (error) {
-      toast({
-        title: 'Account create error.',
-        description: `${error.message}`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      });
+      toast.error(error.message);
       dispatch(updateUserFailure(error.message));
     }
   };
@@ -160,7 +136,7 @@ export default function Profile() {
         <h1 className=" text-3xl font-semibold text-center my-7 max-lg">
           Profile
         </h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-1">
           <input
             onChange={(e) => setFile(e.target.files[0])}
             type="file"
@@ -169,10 +145,11 @@ export default function Profile() {
             accept="image/*"
           />
           <Avatar
-            size="xl"
-            name={currentUser.userName}
+            size="xxl"
+            variant="rounded"
+            withBorder={true}
             src={formData.avatar || currentUser.avatar}
-            alignSelf="center"
+            className=" self-center"
             onClick={() => fileRef.current.click()}
           />
 
@@ -187,69 +164,59 @@ export default function Profile() {
               <span className=" text-green-700">Successfully Uploaded</span>
             ) : null}
           </div>
-          <FormControl isRequired>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              id="username"
-              defaultValue={currentUser.userName}
-              placeholder="name"
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              id="email"
-              defaultValue={currentUser.email}
-              placeholder="email"
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Phone Number</FormLabel>
-            <Input
-              type="tel"
-              id="phoneNumber"
-              defaultValue={currentUser.phoneNumber}
-              placeholder="phone number"
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Address</FormLabel>
-            <Input
-              type="text"
-              id="address"
-              defaultValue={currentUser.address}
-              placeholder="address"
-              onChange={handleChange}
-            />
-          </FormControl>
-          <Button
-            type="submit"
-            colorScheme="yellow"
-            isLoading={loading}
-            loadingText="Submitting"
-          >
-            Update
-          </Button>
+
+          <Typography className="mt-3 font-medium">Name</Typography>
+
+          <Input
+            type="text"
+            id="username"
+            defaultValue={currentUser.userName}
+            placeholder="name"
+            onChange={handleChange}
+          />
+          <Typography className="mt-3 font-medium">Email</Typography>
+          <Input
+            type="email"
+            id="email"
+            defaultValue={currentUser.email}
+            placeholder="email"
+            onChange={handleChange}
+          />
+          <Typography className="mt-3 font-medium">Phone Number</Typography>
+          <Input
+            type="tel"
+            id="phoneNumber"
+            defaultValue={currentUser.phoneNumber}
+            placeholder="phone number"
+            onChange={handleChange}
+          />
+          <Typography className="mt-3 font-medium">Address</Typography>
+          <Input
+            type="text"
+            id="address"
+            defaultValue={currentUser.address}
+            placeholder="address"
+            onChange={handleChange}
+          />
+
+          <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
+            {loading ? 'loading...' : 'Update'}
+          </button>
         </form>
         <div className=" flex justify-between mt-2">
           <Button
             size="sm"
             onClick={handleDeleteUser}
-            colorScheme="red"
-            variant="outline"
+            color="red"
+            variant="outlined"
           >
             Delete Account
           </Button>
           <Button
             size="sm"
             onClick={handleLogout}
-            colorScheme="red"
-            variant="outline"
+            color="red"
+            variant="outlined"
           >
             Log Out
           </Button>
