@@ -17,6 +17,7 @@ import DashBoard from './pages/admin/DashBoard';
 import Shop from './pages/Shop';
 import UpdateProduct from './pages/admin/UpdateProduct';
 import Product from './pages/Product';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           pauseOnFocusLoss={false}
         />
       </div>
+      <Footer />
     </BrowserRouter>
   );
 }
