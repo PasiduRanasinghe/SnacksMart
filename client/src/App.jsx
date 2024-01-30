@@ -23,7 +23,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className=" mt-16">
+      <div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
