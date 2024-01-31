@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardHeader,
@@ -10,10 +12,10 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cart/cartSlice';
 import { toast } from 'react-toastify';
 
-export default function ProductCard({ product }) {
+const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
 
-  const HandleAddToCart = (product) => {
+  const handleAddToCart = (product) => {
     dispatch(addToCart(product));
     toast.success('Added To Cart Successfully');
   };
@@ -28,15 +30,26 @@ export default function ProductCard({ product }) {
           {product.title}
         </Typography>
         <Typography variant="small">{product.description}</Typography>
-        <Typography className=" self-end font-bold" variant="medium">
+        <Typography className="self-end font-bold" variant="medium">
           LKR {product.price}
         </Typography>
       </CardBody>
       <CardFooter className="p-2 flex justify-center">
-        <Button size="sm" onClick={() => HandleAddToCart(product)}>
+        <Button size="sm" onClick={() => handleAddToCart(product)}>
           add cart
         </Button>
       </CardFooter>
     </Card>
   );
-}
+};
+
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
+export default ProductCard;
