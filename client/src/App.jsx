@@ -18,6 +18,8 @@ import Shop from './pages/Shop';
 import UpdateProduct from './pages/admin/UpdateProduct';
 import Product from './pages/Product';
 import Footer from './components/Footer';
+import Orders from './pages/Orders';
+import Cart from './components/Cart';
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/product/:productId" element={<Product />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
