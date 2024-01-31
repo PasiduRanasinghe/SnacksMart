@@ -17,7 +17,7 @@ import {
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
-} from '../redux/user/userSlice';
+} from '../redux/slices/userSlice';
 
 import { toast } from 'react-toastify';
 import { Avatar, Button, Input, Typography } from '@material-tailwind/react';

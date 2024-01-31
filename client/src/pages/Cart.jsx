@@ -1,7 +1,7 @@
 import { MinusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { IconButton, Typography } from '@material-tailwind/react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, removeFromCart } from '../redux/cart/cartSlice';
+import { addToCart, removeFromCart } from '../redux/slices/cartSlice';
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);

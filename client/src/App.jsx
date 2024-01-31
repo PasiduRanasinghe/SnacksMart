@@ -19,7 +19,7 @@ import UpdateProduct from './pages/admin/UpdateProduct';
 import Product from './pages/Product';
 import Footer from './components/Footer';
 import Orders from './pages/Orders';
-import Cart from './components/Cart';
+import Cart from './pages/Cart';
 
 export default function App() {
   return (

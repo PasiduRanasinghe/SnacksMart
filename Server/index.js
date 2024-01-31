@@ -5,6 +5,7 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import productRouter from './routes/product.route.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 dotenv.config();
 
 //connect to mongoDB
@@ -25,6 +26,7 @@ app.listen(3000, () => {
 });
 
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

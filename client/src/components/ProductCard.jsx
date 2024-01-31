@@ -9,7 +9,7 @@ import {
   Button,
 } from '@material-tailwind/react';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../redux/cart/cartSlice';
+import { addToCart } from '../redux/slices/cartSlice';
 import { toast } from 'react-toastify';
 
 const ProductCard = ({ product }) => {
