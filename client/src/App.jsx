@@ -21,6 +21,8 @@ import Footer from './components/Footer';
 import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 
+import Unauthorized from './pages/Unauthorized';
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -31,12 +33,17 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/product/:productId" element={<Product />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+
           <Route element={<PrivateRoute />}>
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/product/:productId" element={<Product />} />
+          </Route>
+
+          <Route element={<PrivateRoute role={'admin'} />}>
             <Route path="/admin" element={<Admin />}>
               <Route index element={<DashBoard />} />
               <Route path="" element={<DashBoard />} />

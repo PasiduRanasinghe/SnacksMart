@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bycrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,10 +26,13 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
   },
   { timestamps: true }
 );
-
+userSchema.methods.validPassword = function (password) {
+  return bycrypt.compareSync(password, this.password);
+};
 const User = mongoose.model('User', userSchema);
 
 export default User;

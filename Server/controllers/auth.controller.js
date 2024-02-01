@@ -1,7 +1,9 @@
+import passport from 'passport';
 import User from '../models/user.model.js';
 import { errorHandler } from '../utils/error.js';
 import bycrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
 const signup = async (req, res, next) => {
   //validate
   const { userName, email, password } = req.body;
@@ -16,21 +18,8 @@ const signup = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const validUser = await User.findOne({ email });
-    if (!validUser) return next(errorHandler(404, 'User Not Found!'));
-    const validPassword = bycrypt.compareSync(password, validUser.password);
-    if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
-    const token = jwt.sign({ id: validUser.id }, process.env.JWT_SECRET);
-    const { password: pass, ...rest } = validUser._doc;
-    res
-      .cookie('access_token', token, { httpOnly: true })
-      .status(200)
-      .json(rest);
-  } catch (error) {
-    next(error);
-  }
+  const { password: pass, ...rest } = req.user._doc;
+  res.status(200).json(rest);
 };
 
 const google = async (req, res, next) => {
@@ -68,11 +57,19 @@ const google = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.clearCookie('access_token');
+    res.logout();
     res.status(200).json('User has been logged out!');
   } catch (error) {
     next(error);
   }
 };
 
-export { signup, login, google, logout };
+const userRole = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.json({ role: req.user.role });
+  } else {
+    next(errorHandler(401, 'UnAuthorized'));
+  }
+};
+
+export { signup, google, login, logout };
