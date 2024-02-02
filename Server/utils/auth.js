@@ -1,16 +1,24 @@
+import passport from 'passport';
 import { errorHandler } from './error.js';
 
-const isAuthenticated = async (req, res, next) => {
-  if (req.isAuthenticated()) {
+const isAuthenticated = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    if (err || !user) {
+      return next(errorHandler(401, 'Unauthorized. Users only.'));
+    }
+    req.user = user;
     return next();
-  }
-  return next(errorHandler(401, 'Unauthorized Users only'));
+  })(req, res, next);
 };
-const isAdmin = async (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === 'admin') {
+
+const isAdmin = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    if (err || !user || user.role !== 'admin') {
+      return next(errorHandler(401, 'Unauthorized. Admins only.'));
+    }
+    req.user = user;
     return next();
-  }
-  return next(401, 'Unauthorized admin only');
+  })(req, res, next);
 };
 
 export { isAdmin, isAuthenticated };

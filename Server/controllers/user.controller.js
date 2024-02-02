@@ -42,4 +42,11 @@ const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
-export { test, updateUser, deleteUser };
+
+const getUser = async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  const { password: pass, ...rest } = user._doc;
+  res.status(200).json(rest);
+};
+export { test, updateUser, deleteUser, getUser };

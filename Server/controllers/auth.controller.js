@@ -18,8 +18,31 @@ const signup = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { password: pass, ...rest } = req.user._doc;
-  res.status(200).json(rest);
+  passport.authenticate(
+    'local',
+    { session: false },
+    (err, userWithToken, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!userWithToken) {
+        return res
+          .status(401)
+          .json({ message: 'Incorrect email or password.' });
+      }
+
+      const { user, token } = userWithToken;
+
+      const { password: pass, ...rest } = user._doc;
+
+      res.cookie('authToken', token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+      res.status(200).json(rest);
+    }
+  )(req, res, next);
 };
 
 const google = async (req, res, next) => {
@@ -57,8 +80,14 @@ const google = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.logout();
-    res.status(200).json('User has been logged out!');
+    req.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.clearCookie('authToken');
+      res.json({ message: 'Logout successful' });
+    });
   } catch (error) {
     next(error);
   }

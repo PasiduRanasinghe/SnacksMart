@@ -8,6 +8,7 @@ import {
 } from '../redux/slices/userSlice';
 import axios from '../api/axiosInstance';
 import Oauth from '../components/Oauth';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [formData, setFormData] = useState({});
@@ -33,13 +34,16 @@ export default function Login() {
       const data = res.data;
       if (data.success === false) {
         dispatch(signInFailure(data.message));
+        toast.error(data.message);
         return;
       } else {
         dispatch(signInSuccess(data));
+        toast.success('Log In Successfully |!');
         navigate('/');
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error(error.message);
     }
   };
   return (

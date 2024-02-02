@@ -19,6 +19,8 @@ import {
   updateUserSuccess,
 } from '../redux/slices/userSlice';
 
+import axios from '../api/axiosInstance';
+
 import { toast } from 'react-toastify';
 import { Avatar, Button, Input, Typography } from '@material-tailwind/react';
 
@@ -35,6 +37,22 @@ export default function Profile() {
     if (file) {
       handleFileUpload(file);
     }
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get('/user');
+
+        const data = res.data;
+        if (data.success === false) {
+          toast.error(data.message);
+          return;
+        }
+        setFormData(data);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+
+    fetchProduct();
   }, [file]);
 
   const handleFileUpload = (file) => {
@@ -148,7 +166,7 @@ export default function Profile() {
             size="xxl"
             variant="rounded"
             withBorder={true}
-            src={formData.avatar || currentUser.avatar}
+            src={formData.avatar}
             className=" self-center"
             onClick={() => fileRef.current.click()}
           />
@@ -170,7 +188,7 @@ export default function Profile() {
           <Input
             type="text"
             id="username"
-            defaultValue={currentUser.userName}
+            defaultValue={formData.userName}
             placeholder="name"
             onChange={handleChange}
           />
@@ -178,7 +196,7 @@ export default function Profile() {
           <Input
             type="email"
             id="email"
-            defaultValue={currentUser.email}
+            defaultValue={formData.email}
             placeholder="email"
             onChange={handleChange}
           />
@@ -186,7 +204,7 @@ export default function Profile() {
           <Input
             type="tel"
             id="phoneNumber"
-            defaultValue={currentUser.phoneNumber}
+            defaultValue={formData.phoneNumber}
             placeholder="phone number"
             onChange={handleChange}
           />
@@ -194,7 +212,7 @@ export default function Profile() {
           <Input
             type="text"
             id="address"
-            defaultValue={currentUser.address}
+            defaultValue={formData.address}
             placeholder="address"
             onChange={handleChange}
           />

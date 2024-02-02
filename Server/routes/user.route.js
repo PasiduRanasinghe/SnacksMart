@@ -1,14 +1,14 @@
 import express, { Router } from 'express';
 import {
   deleteUser,
-  test,
+  getUser,
   updateUser,
 } from '../controllers/user.controller.js';
-import { verifyToken } from './../utils/verifyUser.js';
+import { isAuthenticated } from '../utils/auth.js';
 
 const router = express.Router();
 
-router.get('/test', test);
-router.put('/update/:id', verifyToken, updateUser);
-router.delete('/delete/:id', verifyToken, deleteUser);
+router.get('/', isAuthenticated, getUser);
+router.put('/update/:id', isAuthenticated, updateUser);
+router.delete('/delete/:id', isAuthenticated, deleteUser);
 export default router;
