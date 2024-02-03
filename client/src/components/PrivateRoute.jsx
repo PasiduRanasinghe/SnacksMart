@@ -45,7 +45,7 @@ export default function PrivateRoute({ role }) {
   }
   if (role && userRole != 'error') {
     return userRole === role ? <Outlet /> : <Navigate to="/unauthorized" />;
-  } else if (userRole === 'user') {
+  } else if (userRole === 'user' || userRole === 'admin') {
     return <Outlet />;
   } else {
     return <Navigate to="/login" />;
