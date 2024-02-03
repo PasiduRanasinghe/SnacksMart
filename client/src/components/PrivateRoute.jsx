@@ -27,7 +27,6 @@ export default function PrivateRoute({ role }) {
 
         setUserRole(data.role);
       } catch (error) {
-        setUserRole('error');
         toast.error(error.message);
       }
     };
