@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import axios from '../api/axiosInstance';
 import { toast } from 'react-toastify';
 import { Spinner } from '@material-tailwind/react';
+import { useDispatch } from 'react-redux';
+
+import { removeUser } from '../redux/slices/userSlice';
 
 export default function PrivateRoute({ role }) {
   const [userRole, setUserRole] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -16,6 +20,7 @@ export default function PrivateRoute({ role }) {
 
         if (data.success === false) {
           setUserRole('error');
+          dispatch(removeUser());
           toast.error(data.message);
           return;
         }
@@ -38,7 +43,6 @@ export default function PrivateRoute({ role }) {
       </div>
     );
   }
-  console.log(userRole);
   if (role && userRole != 'error') {
     return userRole === role ? <Outlet /> : <Navigate to="/unauthorized" />;
   } else if (userRole === 'user') {
