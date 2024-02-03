@@ -15,12 +15,14 @@ export default function PrivateRoute({ role }) {
         const data = res.data;
 
         if (data.success === false) {
+          setUserRole('error');
           toast.error(data.message);
           return;
         }
 
         setUserRole(data.role);
       } catch (error) {
+        setUserRole('error');
         toast.error(error.message);
       }
     };
@@ -37,10 +39,12 @@ export default function PrivateRoute({ role }) {
     );
   }
   console.log(userRole);
-  if (role) {
+  if (role && userRole != 'error') {
     return userRole === role ? <Outlet /> : <Navigate to="/unauthorized" />;
+  } else if (userRole === 'user') {
+    return <Outlet />;
   } else {
-    return userRole ? <Outlet /> : <Navigate to="/login" />;
+    return <Navigate to="/login" />;
   }
 }
 

@@ -25,10 +25,12 @@ const ProductCard = ({ product }) => {
         <img src={product.image} alt="card-image" />
       </CardHeader>
       <CardBody className="m-0 p-2 flex flex-col">
-        <Typography variant="h5" color="blue-gray" className="mb-2">
+        <Typography variant="h5" color="blue-gray" className="mb-2 self-start">
           {product.title}
         </Typography>
-        <Typography variant="small">{product.description}</Typography>
+        <Typography variant="small" className=" self-start">
+          {product.description}
+        </Typography>
         <Typography className="self-end font-bold" variant="h6">
           LKR {product.price}
         </Typography>

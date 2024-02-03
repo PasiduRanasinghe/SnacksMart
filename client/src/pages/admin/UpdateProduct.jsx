@@ -156,15 +156,7 @@ export default function UpdateProduct() {
           required
           value={formData.price}
         />
-        <Typography className="mt-3 font-medium">Discount</Typography>
-        <Input
-          type="number"
-          max={99}
-          min={0}
-          id="discount"
-          onChange={handleChange}
-          value={formData.discount}
-        />
+
         <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
           {loading ? 'loading...' : 'Update Product'}
         </button>
