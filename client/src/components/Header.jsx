@@ -65,6 +65,11 @@ export default function Header() {
 
             {currentUser ? (
               <MenuList>
+                {currentUser.role === 'admin' ? (
+                  <Link to="/admin">
+                    <MenuItem>Dashboard</MenuItem>
+                  </Link>
+                ) : null}
                 <Link to="/profile">
                   <MenuItem>My Profile</MenuItem>
                 </Link>
