@@ -2,6 +2,8 @@ import { Input, Textarea, Typography } from '@material-tailwind/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axios from '../../api/axiosInstance';
+
 import { useEffect } from 'react';
 
 import { toast } from 'react-toastify';
@@ -30,6 +32,13 @@ export default function CreateProduct() {
       handleFileUpload(file);
     }
   }, [file]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -62,26 +71,18 @@ export default function CreateProduct() {
     );
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
 
-      const res = await fetch('/api/v1/product/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const res = await axios.post('/product/', {
+        image: formData.image,
+        title: formData.title,
+        description: formData.description,
+        price: formData.price,
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.success === false) {
         toast.error(data.message);
         return;
@@ -119,14 +120,7 @@ export default function CreateProduct() {
           onChange={handleChange}
           required
         />
-        <Typography className="mt-3 font-medium">Discount</Typography>
-        <Input
-          type="number"
-          max={99}
-          min={0}
-          id="discount"
-          onChange={handleChange}
-        />
+
         <button className="mt-3 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-900">
           {loading ? 'loading...' : 'Create Product'}
         </button>

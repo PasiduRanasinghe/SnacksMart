@@ -19,14 +19,22 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
+      required: true,
     },
     phoneNumber: {
       type: Number,
+      required: true,
     },
     avatar: {
       type: String,
+      default:
+        'https://firebasestorage.googleapis.com/v0/b/snacksmart-2ccf7.appspot.com/o/avatars%2F1706891285125user.png?alt=media&token=3f7d324c-8e39-49df-9ef3-c4279875e5cf',
     },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
   },
   { timestamps: true }
 );

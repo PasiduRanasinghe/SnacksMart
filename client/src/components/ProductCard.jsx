@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
           {product.title}
         </Typography>
         <Typography variant="small">{product.description}</Typography>
-        <Typography className="self-end font-bold" variant="medium">
+        <Typography className="self-end font-bold" variant="h6">
           LKR {product.price}
         </Typography>
       </CardBody>

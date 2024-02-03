@@ -17,6 +17,8 @@ const updateUser = async (req, res, next) => {
         $set: {
           userName: req.body.username,
           email: req.body.email,
+          phoneNumber: req.body.phoneNumber,
+          address: req.body.address,
           avatar: req.body.avatar,
         },
       },

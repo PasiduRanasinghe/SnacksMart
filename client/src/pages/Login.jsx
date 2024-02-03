@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from '../redux/slices/userSlice';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/slices/userSlice';
 import axios from '../api/axiosInstance';
 import Oauth from '../components/Oauth';
 import { toast } from 'react-toastify';
+import { Input } from '@material-tailwind/react';
 
 export default function Login() {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,52 +23,48 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart());
+      setLoading(true);
       const res = await axios.post('/auth/login', {
         username: formData.email,
         password: formData.password,
       });
       const data = res.data;
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
         toast.error(data.message);
         return;
       } else {
-        dispatch(signInSuccess(data));
-        toast.success('Log In Successfully |!');
+        dispatch(setUser(data));
+        toast.success('Log In Successfully !');
         navigate('/');
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className=" text-3xl text-center font-semibold my-7">Log In</h1>
       <form onSubmit={handleSubmit} className=" flex flex-col gap-4">
-        <input
+        <Input
+          label="Email"
           type="email"
-          placeholder="email"
-          className=" border p-3 rounded-lg"
           id="email"
-          required
           onChange={handleChange}
+          required
         />
-        <input
+
+        <Input
+          label="Password"
           type="password"
-          placeholder="password"
-          className=" border p-3 rounded-lg"
           id="password"
-          required
           onChange={handleChange}
+          required
         />
-        {error && <p className=" text-red-500 ">{error}</p>}
-        <button
-          disabled={loading}
-          className=" bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-70"
-        >
-          {loading ? 'Loading...' : 'Log In'}
+
+        <button className="mt-2 p-2 text-white hover:shadow-xl focus:opacity-90  rounded-lg w-full bg-light-blue-800">
+          {loading ? 'loading...' : 'Log In'}
         </button>
         <Oauth />
       </form>

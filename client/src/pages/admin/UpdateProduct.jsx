@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
-
+import axios from '../../api/axiosInstance';
 import {
   getDownloadURL,
   getStorage,
@@ -34,9 +34,8 @@ export default function UpdateProduct() {
     }
     const fetchProduct = async () => {
       const productId = params.productId;
-      const res = await fetch(`/api/v1/product/${productId}`);
-
-      const data = await res.json();
+      const res = await axios.get(`/product/${productId}`);
+      const data = res.data;
       if (data.success === false) {
         console.log(data.message);
         return;
@@ -90,14 +89,13 @@ export default function UpdateProduct() {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/v1/product/${params.productId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const res = await axios.put(`/product/${params.productId}`, {
+        image: formData.image,
+        title: formData.title,
+        description: formData.description,
+        price: formData.price,
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.success === false) {
         toast.error(data.message);
         return;

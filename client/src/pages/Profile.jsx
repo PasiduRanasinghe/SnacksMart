@@ -7,17 +7,7 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from './../firebase';
-import {
-  deleteUserFailure,
-  deleteUserStart,
-  deleteUserSuccess,
-  logoutUserFailure,
-  logoutUserStart,
-  logoutUserSuccess,
-  updateUserFailure,
-  updateUserStart,
-  updateUserSuccess,
-} from '../redux/slices/userSlice';
+import { removeUser, setUser } from '../redux/slices/userSlice';
 
 import axios from '../api/axiosInstance';
 
@@ -25,12 +15,14 @@ import { toast } from 'react-toastify';
 import { Avatar, Button, Input, Typography } from '@material-tailwind/react';
 
 export default function Profile() {
-  const { currentUser, loading } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const fileRef = useRef();
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(undefined);
   const [filePercentage, setFilePercentage] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [fileUploadError, setFileUploadError] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,6 +52,7 @@ export default function Profile() {
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, `avatars/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
+    const id = toast.loading('Avatar Uploading...');
 
     if (formData.avatar) {
       const fileRef = storage.refFromURL(formData.avatar);
@@ -75,12 +68,23 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true);
-        toast.error(error.message);
+
+        toast.update(id, {
+          render: error.message,
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setFormData({ ...formData, avatar: downloadURL });
-          toast.success('Avatar Uploaded!');
+          toast.update(id, {
+            render: 'Avatar Uploaded !',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
         });
       }
     );
@@ -92,59 +96,86 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateUserStart());
-      const res = await fetch(`api/v1/user/update/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      setLoading(true);
+      const res = await axios.put(`/user/update/${currentUser._id}`, {
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
+      const data = res.data;
 
       if (data.success === false) {
         toast.error('Account update error.');
-        dispatch(updateUserFailure(data.message));
         return;
       }
       toast.success('Account Updated.');
-      dispatch(updateUserSuccess(data));
+      dispatch(setUser(data));
     } catch (error) {
       toast.error(error.message);
-      dispatch(updateUserFailure(error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteUser = async () => {
+    const id = toast.loading('User Deleting...');
     try {
-      dispatch(deleteUserStart());
-      const res = await fetch(`api/v1/user/delete/${currentUser._id}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
+      const res = await axios.delete(`api/v1/user/delete/${currentUser._id}`);
+      const data = res.data;
       if (data.success === false) {
-        dispatch(deleteUserFailure(data.message));
+        toast.update(id, {
+          render: 'Error: User Delete Failed !',
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
         return;
       } else {
-        dispatch(deleteUserSuccess());
+        dispatch(removeUser());
+        toast.update(id, {
+          render: 'User Deleted Successfully !',
+          type: 'success',
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
     } catch (error) {
-      dispatch(deleteUserFailure(error));
+      toast.update(id, {
+        render: error.message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
   const handleLogout = async () => {
+    const id = toast.loading('User Deleting...');
     try {
-      dispatch(logoutUserStart());
-      const res = await fetch('/api/v1/auth/logout');
-      const data = await res.json();
+      const res = await axios.get('/auth/logout');
+      const data = res.data;
 
       if (data.success === false) {
-        dispatch(logoutUserFailure(data.message));
+        toast.update(id, {
+          render: 'Error: Failed Log Out ',
+          type: 'error',
+          isLoading: false,
+          autoClose: 3000,
+        });
         return;
       }
-      dispatch(logoutUserSuccess());
+
+      dispatch(removeUser());
+      toast.update(id, {
+        render: 'Logged Out Successfully !',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      });
     } catch (error) {
-      dispatch(logoutUserFailure(error));
+      toast.update(id, {
+        render: error.message,
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
 
@@ -187,8 +218,8 @@ export default function Profile() {
 
           <Input
             type="text"
-            id="username"
-            defaultValue={formData.userName}
+            id="userName"
+            value={formData.userName}
             placeholder="name"
             onChange={handleChange}
           />
@@ -196,7 +227,7 @@ export default function Profile() {
           <Input
             type="email"
             id="email"
-            defaultValue={formData.email}
+            value={formData.email}
             placeholder="email"
             onChange={handleChange}
           />
@@ -204,7 +235,7 @@ export default function Profile() {
           <Input
             type="tel"
             id="phoneNumber"
-            defaultValue={formData.phoneNumber}
+            value={formData.phoneNumber}
             placeholder="phone number"
             onChange={handleChange}
           />
@@ -212,7 +243,7 @@ export default function Profile() {
           <Input
             type="text"
             id="address"
-            defaultValue={formData.address}
+            value={formData.address}
             placeholder="address"
             onChange={handleChange}
           />

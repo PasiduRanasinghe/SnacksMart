@@ -6,10 +6,18 @@ import jwt from 'jsonwebtoken';
 
 const signup = async (req, res, next) => {
   //validate
-  const { userName, email, password } = req.body;
-  const hashedPassword = bycrypt.hashSync(password, 10);
-  const user = new User({ userName, email, password: hashedPassword });
+  const { userName, email, password, address, phoneNumber } = req.body;
+  console.log(password);
+
   try {
+    const hashedPassword = bycrypt.hashSync(password, 10);
+    const user = new User({
+      userName,
+      email,
+      password: hashedPassword,
+      address,
+      phoneNumber,
+    });
     await user.save();
     res.status(201).json('User Created Successfully!');
   } catch (error) {
@@ -79,18 +87,8 @@ const google = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  try {
-    req.logout((err) => {
-      if (err) {
-        return next(err);
-      }
-
-      res.clearCookie('authToken');
-      res.json({ message: 'Logout successful' });
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.clearCookie('authToken');
+  res.status(200).json('Logout successful');
 };
 
 const userRole = async (req, res, next) => {
@@ -101,4 +99,10 @@ const userRole = async (req, res, next) => {
   }
 };
 
-export { signup, google, login, logout };
+const authenticate = async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const { role, ...rest } = user._doc;
+  res.status(200).json({ role: role });
+};
+
+export { signup, google, login, logout, authenticate };
