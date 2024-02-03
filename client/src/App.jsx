@@ -61,6 +61,8 @@ export default function App() {
           theme="colored"
           transition={Slide}
           pauseOnFocusLoss={false}
+          autoClose={2200}
+          pauseOnHover={false}
         />
       </div>
       <Footer />
