@@ -14,7 +14,7 @@ export default function Cart() {
     dispatch(removeFromCart(item));
   };
   return (
-    <div className="flex flex-col items-center m-4">
+    <div className="flex flex-col items-center m-4 min-h-96">
       <Typography variant="h2">Shopping Cart</Typography>
       <table className=" mt-6 w-full table-auto">
         <thead>

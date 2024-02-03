@@ -22,12 +22,12 @@ export default function Home() {
     <div>
       <Carousel autoplay={true} loop={true} className=" h-96">
         <img
-          src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80"
+          src="https://firebasestorage.googleapis.com/v0/b/snacksmart-2ccf7.appspot.com/o/images%2Fpizza.jpg?alt=media&token=08c20d14-7e50-4e70-a0bf-dd4d8448a1be"
           alt="image 1"
           className="h-full w-full object-cover"
         />
         <img
-          src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+          src="https://firebasestorage.googleapis.com/v0/b/snacksmart-2ccf7.appspot.com/o/images%2Fsamosa.jpg?alt=media&token=1ec81b21-150a-408c-b056-33d11f44a0d4"
           alt="image 2"
           className="h-full w-full object-cover"
         />
