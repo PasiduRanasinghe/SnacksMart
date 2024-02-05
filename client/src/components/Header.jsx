@@ -36,7 +36,7 @@ export default function Header() {
     }
   };
   return (
-    <header className="top-0 sticky z-50 m-0 p-3 bg-teal-100 shadow-sm">
+    <header className="top-0 sticky z-50 m-0 py-2 pl-4 pr-3 bg-teal-100 shadow-sm">
       <div className=" flex flex-row justify-between ">
         <NavLink to="/">
           <div className="flex flex-row items-center">
