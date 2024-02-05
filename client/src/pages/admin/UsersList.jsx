@@ -1,6 +1,5 @@
 import { IconButton, Typography } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../api/axiosInstance';
 
@@ -22,7 +21,6 @@ function TrashIcon() {
 }
 export default function UsersList() {
   const [usersList, setUsersList] = useState([]);
-
   useEffect(() => {
     const handleUsers = async () => {
       const res = await axios.get('/user/list');
@@ -53,6 +51,22 @@ export default function UsersList() {
       toast.error(error.message);
     }
   };
+  const handleSelectRole = async (userId, userName, role) => {
+    const shouldUpdate = window.confirm(
+      `Are you sure you want to update ${userName}'s role to ${role}?`
+    );
+    if (!shouldUpdate) {
+      return;
+    }
+    try {
+      await axios.put(`/user/update-role/${userId}`, {
+        role: role,
+      });
+      toast.success(`${userName}'s Role Updated Successfully`);
+    } catch (error) {
+      toast.error(error.response.statusText);
+    }
+  };
 
   return (
     <>
@@ -67,6 +81,13 @@ export default function UsersList() {
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 Email
               </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Phone Number
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                Address
+              </th>
+
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 Role
               </th>
@@ -91,13 +112,33 @@ export default function UsersList() {
                     </Typography>
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
-                    <Typography
-                      variant="small"
-                      color="gray"
-                      className="font-normal"
-                    >
-                      {user.role}
+                    <Typography variant="small" color="blue-gray">
+                      {user.phoneNumber}
                     </Typography>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <Typography variant="small" color="blue-gray">
+                      {user.address}
+                    </Typography>
+                  </td>
+                  <td className="p-4 border-b border-blue-gray-50">
+                    <select
+                      id="roleSelect"
+                      defaultValue={user.role}
+                      className=" bg-transparent p-1 rounded-lg"
+                      onChange={(e) =>
+                        handleSelectRole(
+                          user._id,
+                          user.userName,
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option value="admin" className=" p-3">
+                        Admin
+                      </option>
+                      <option value="user">User</option>
+                    </select>
                   </td>
 
                   <td className="p-4 border-b border-blue-gray-50">

@@ -62,11 +62,40 @@ const getUser = async (req, res, next) => {
 
 const listUsers = async (req, res, next) => {
   try {
-    const user = await User.find({});
-    return res.status(200).json(user);
+    const users = await User.find({});
+
+    const usersWithoutPasswords = users.map((user) => {
+      const { password, ...userWithoutPassword } = user.toObject();
+      return userWithoutPassword;
+    });
+    return res.status(200).json(usersWithoutPasswords);
+  } catch (error) {
+    next(error);
+  }
+};
+const updateRole = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          role: req.body.role,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json('User role has been updated!');
   } catch (error) {
     next(error);
   }
 };
 
-export { test, updateUser, deleteUser, getUser, listUsers, deleteUserAdmin };
+export {
+  test,
+  updateUser,
+  deleteUser,
+  getUser,
+  listUsers,
+  deleteUserAdmin,
+  updateRole,
+};
