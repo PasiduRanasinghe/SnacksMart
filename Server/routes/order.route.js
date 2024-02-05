@@ -1,10 +1,11 @@
 import express from 'express';
 import { getOrders, placeOrder } from '../controllers/order.controller';
-import { verifyToken } from './../utils/verifyUser';
+
+import { isAdmin, isAuthenticated } from '../utils/auth.js';
 
 const router = express.Router();
 
-router.post('/', verifyToken, placeOrder);
-router.get('/list', verifyToken, getOrders);
+router.post('/', isAuthenticated, placeOrder);
+router.get('/list', isAdmin, getOrders);
 
 export default router;

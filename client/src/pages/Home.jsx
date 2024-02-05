@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Carousel } from '@material-tailwind/react';
+import { Button, Carousel } from '@material-tailwind/react';
 import ProductCard from './../components/ProductCard';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [productList, setProductList] = useState([]);
@@ -19,7 +20,7 @@ export default function Home() {
     handleProducts();
   }, []);
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <Carousel autoplay={true} loop={true} className=" h-96">
         <img
           src="https://firebasestorage.googleapis.com/v0/b/snacksmart-2ccf7.appspot.com/o/images%2Fpizza.jpg?alt=media&token=08c20d14-7e50-4e70-a0bf-dd4d8448a1be"
@@ -39,6 +40,11 @@ export default function Home() {
             <ProductCard key={product._id} product={product} />
           ))}
       </div>
+      <Link to="/shop">
+        <Button variant="outlined" className=" w-full mb-5 ">
+          Show More
+        </Button>
+      </Link>
     </div>
   );
 }

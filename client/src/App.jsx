@@ -22,6 +22,9 @@ import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 
 import Unauthorized from './pages/Unauthorized';
+import ContactUs from './pages/ContactUs';
+import InquiriesList from './pages/admin/InquiriesList';
+import UsersList from './pages/admin/UsersList';
 
 export default function App() {
   return (
@@ -33,6 +36,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           <Route element={<PrivateRoute />}>
@@ -49,6 +53,8 @@ export default function App() {
               <Route path="" element={<DashBoard />} />
               <Route path="create-product" element={<CreateProduct />} />
               <Route path="list-products" element={<ProductsList />} />
+              <Route path="list-inquiries" element={<InquiriesList />} />
+              <Route path="list-users" element={<UsersList />} />
             </Route>
             <Route
               path="admin/update-product/:productId"

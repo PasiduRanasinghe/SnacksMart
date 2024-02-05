@@ -38,7 +38,15 @@ const deleteUser = async (req, res, next) => {
 
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.clearCookie('access_token');
+    res.clearCookie('authToken');
+    res.status(200).json('User has been deleted!');
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteUserAdmin = async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
     res.status(200).json('User has been deleted!');
   } catch (error) {
     next(error);
@@ -51,4 +59,14 @@ const getUser = async (req, res, next) => {
   const { password: pass, ...rest } = user._doc;
   res.status(200).json(rest);
 };
-export { test, updateUser, deleteUser, getUser };
+
+const listUsers = async (req, res, next) => {
+  try {
+    const user = await User.find({});
+    return res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { test, updateUser, deleteUser, getUser, listUsers, deleteUserAdmin };

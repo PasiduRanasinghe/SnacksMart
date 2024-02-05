@@ -10,15 +10,25 @@ export default function Admin() {
             DashBoard
           </Tab>
         </NavLink>
+        <NavLink to={'create-product'}>
+          <Tab className=" p-2" key="createProduct" value="createProduct">
+            Create Product
+          </Tab>
+        </NavLink>
         <NavLink to={'list-products'}>
           <Tab className=" p-2" key="products" value="products">
             Products
           </Tab>
         </NavLink>
 
-        <NavLink to={'create-product'}>
-          <Tab className=" p-2" key="createProduct" value="createProduct">
-            Create Product
+        <NavLink to={'list-inquiries'}>
+          <Tab className=" p-2" key="inquiries" value="inquiries">
+            Inquiries
+          </Tab>
+        </NavLink>
+        <NavLink to={'list-users'}>
+          <Tab className=" p-2" key="users" value="users">
+            Users
           </Tab>
         </NavLink>
       </TabsHeader>

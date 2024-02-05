@@ -6,6 +6,7 @@ import passport from 'passport';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import productRouter from './routes/product.route.js';
+import inquiryRouter from './routes/inquiry.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 dotenv.config();
@@ -40,6 +41,7 @@ app.use(passport.initialize());
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/product', productRouter);
+app.use('/api/v1/inquiry', inquiryRouter);
 
 //middleware for error handling
 app.use((err, req, res, next) => {
