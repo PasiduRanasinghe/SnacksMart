@@ -78,10 +78,6 @@ export default function OrdersList() {
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 UserName
               </th>
-
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                Phone Number
-              </th>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 Address
               </th>
@@ -109,11 +105,7 @@ export default function OrdersList() {
                       {order.user.userName}
                     </Typography>
                   </td>
-                  <td className="p-4 border-b border-blue-gray-50">
-                    <Typography variant="small" color="blue-gray">
-                      {order.user.phoneNumber}
-                    </Typography>
-                  </td>
+
                   <td className="p-4 border-b border-blue-gray-50">
                     <Typography variant="small" color="blue-gray">
                       {order.user.address}
@@ -121,7 +113,9 @@ export default function OrdersList() {
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
                     <Typography variant="small" color="blue-gray">
-                      j
+                      {order.items.map((item) => (
+                        <li key={item._id}>{item.title}</li>
+                      ))}
                     </Typography>
                   </td>
                   <td className="p-4 border-b border-blue-gray-50">
