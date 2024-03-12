@@ -25,6 +25,7 @@ import Unauthorized from './pages/Unauthorized';
 import ContactUs from './pages/ContactUs';
 import InquiriesList from './pages/admin/InquiriesList';
 import UsersList from './pages/admin/UsersList';
+import OrdersList from './pages/admin/OrdersList';
 
 export default function App() {
   return (
@@ -55,6 +56,7 @@ export default function App() {
               <Route path="list-products" element={<ProductsList />} />
               <Route path="list-inquiries" element={<InquiriesList />} />
               <Route path="list-users" element={<UsersList />} />
+              <Route path="list-orders" element={<OrdersList />} />
             </Route>
             <Route
               path="admin/update-product/:productId"

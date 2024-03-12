@@ -1,5 +1,5 @@
 import express from 'express';
-import { getOrders, placeOrder } from '../controllers/order.controller';
+import { getOrders, placeOrder } from '../controllers/order.controller.js';
 
 import { isAdmin, isAuthenticated } from '../utils/auth.js';
 

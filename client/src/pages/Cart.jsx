@@ -1,7 +1,13 @@
 import { MinusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { IconButton, Typography } from '@material-tailwind/react';
+import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, removeFromCart } from '../redux/slices/cartSlice';
+import {
+  addToCart,
+  clearCart,
+  removeFromCart,
+} from '../redux/slices/cartSlice';
+import axios from '../api/axiosInstance';
+import { toast } from 'react-toastify';
 
 export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -12,6 +18,21 @@ export default function Cart() {
   };
   const handleQuantityMinus = (item) => {
     dispatch(removeFromCart(item));
+  };
+  const handlePlaceOrder = async () => {
+    const total = cartItems.reduce((total, item) => {
+      return total + item.price * item.quantity;
+    }, 0);
+    try {
+      await axios.post('/order', {
+        items: cartItems,
+        total: total,
+      });
+      dispatch(clearCart());
+      toast.success('Order Placed Successfully');
+    } catch (error) {
+      toast.error(error.response.statusText);
+    }
   };
   return (
     <div className="flex flex-col items-center m-4 min-h-96">
@@ -26,11 +47,19 @@ export default function Cart() {
             <th>Option</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="mt-9">
           {cartItems.map((item) => (
             <tr key={item._id}>
-              <th>{item.title} </th>
-              <th>LKR${item.price}</th>
+              <th>
+                <Typography variant="paragraph" color="blue-gray">
+                  {item.title}{' '}
+                </Typography>
+              </th>
+              <th>
+                <Typography variant="paragraph" color="blue-gray">
+                  LKR-{item.price}
+                </Typography>
+              </th>
               <th>
                 <div className="flex justify-center">
                   <IconButton
@@ -66,6 +95,9 @@ export default function Cart() {
           ))}
         </tbody>
       </table>
+      <div className="flex w-screen p-9 pr-16 justify-end">
+        <Button onClick={handlePlaceOrder}>Place Order</Button>
+      </div>
     </div>
   );
 }

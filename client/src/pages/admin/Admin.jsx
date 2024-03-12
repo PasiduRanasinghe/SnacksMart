@@ -31,6 +31,11 @@ export default function Admin() {
             Users
           </Tab>
         </NavLink>
+        <NavLink to={'list-orders'}>
+          <Tab className=" p-2" key="orders" value="orders">
+            Orders
+          </Tab>
+        </NavLink>
       </TabsHeader>
       <TabsBody className=" p-4">
         <Outlet />
