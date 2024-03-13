@@ -15,6 +15,18 @@ const placeOrder = async (req, res, next) => {
 
 const getOrders = async (req, res, next) => {
   try {
+    const orders = await Order.find({ user: req.user.id }).populate({
+      path: 'user',
+      select: 'userName address',
+    });
+
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+const getAllOrders = async (req, res, next) => {
+  try {
     const orders = await Order.find({}).populate({
       path: 'user',
       select: 'userName address',
@@ -26,4 +38,22 @@ const getOrders = async (req, res, next) => {
   }
 };
 
-export { placeOrder, getOrders };
+const updateOrderStatus = async (req, res, next) => {
+  try {
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          orderStatus: req.body.orderStatus,
+        },
+      },
+      { new: true }
+    );
+
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { placeOrder, getOrders, getAllOrders, updateOrderStatus };

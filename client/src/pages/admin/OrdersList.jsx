@@ -22,8 +22,8 @@ function TrashIcon() {
 export default function OrdersList() {
   const [ordersList, setOrdersList] = useState([]);
   useEffect(() => {
-    const handleUsers = async () => {
-      const res = await axios.get('/order/list');
+    const handleOrders = async () => {
+      const res = await axios.get('/order/list-all');
       const data = res.data;
       if (data.success === false) {
         toast.error(data.message);
@@ -32,37 +32,37 @@ export default function OrdersList() {
       setOrdersList(data);
     };
 
-    handleUsers();
+    handleOrders();
   }, []);
 
-  const handleDeleteUser = async (inquiryId) => {
+  const handleCancelOrder = async (orderId) => {
     try {
-      const res = await axios.delete(`/user/${inquiryId}`);
-      const data = res.data;
-      if (data.success === false) {
-        toast.error(data.message);
-        return;
-      }
-      setOrdersList((prev) =>
-        prev.filter((inquiry) => inquiry._id !== inquiryId)
-      );
-      toast.success('User Deleted Successfully !');
+      await axios.put(`/order/update-status/${orderId}`, {
+        orderStatus: 'Cancelled',
+      });
+      toast.success(`Order Cancelled Successfully`);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.statusText);
     }
   };
-  const handleSelectRole = async (userId, userName, role) => {
+  const handleUpdateOrderStatus = async (
+    orderId,
+    prevOrderStatus,
+    selectedOrderStatus
+  ) => {
     const shouldUpdate = window.confirm(
-      `Are you sure you want to update ${userName}'s role to ${role}?`
+      `Are you sure you want to update ${prevOrderStatus} to ${selectedOrderStatus}?`
     );
     if (!shouldUpdate) {
       return;
     }
     try {
-      await axios.put(`/user/update-role/${userId}`, {
-        role: role,
+      await axios.put(`/order/update-status/${orderId}`, {
+        orderStatus: selectedOrderStatus,
       });
-      toast.success(`${userName}'s Role Updated Successfully`);
+      toast.success(
+        `Update Order Status to ${selectedOrderStatus} Updated Successfully`
+      );
     } catch (error) {
       toast.error(error.response.statusText);
     }
@@ -128,7 +128,13 @@ export default function OrdersList() {
                       id="roleSelect"
                       defaultValue={order.orderStatus}
                       className=" bg-transparent p-1 rounded-lg"
-                      onChange={(e) => handleSelectRole(e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateOrderStatus(
+                          order._id,
+                          order.orderStatus,
+                          e.target.value
+                        )
+                      }
                     >
                       <option value="Processing">Processing</option>
                       <option value="Placed">Placed</option>
@@ -138,10 +144,9 @@ export default function OrdersList() {
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
-
                   <td className="p-4 border-b border-blue-gray-50">
                     <IconButton
-                      onClick={() => handleDeleteUser(order._id)}
+                      onClick={() => handleCancelOrder(order._id)}
                       variant="text"
                       color="red"
                     >
