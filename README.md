@@ -86,7 +86,6 @@ Visit `http://localhost:3000` to start using the app.
 
 ## 📸 Screenshots
 
-> Add screenshots or GIFs here to visually represent your UI and functionality.
 
 ## 📜 License
 
