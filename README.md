@@ -37,7 +37,7 @@ SnacksMart/
 
 * Node.js and npm
 * MongoDB (local or cloud)
-* Git
+
 
 ### Installation
 
